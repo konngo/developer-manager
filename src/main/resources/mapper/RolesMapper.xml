@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.konngo.dao.RolesDao">
+
+    <resultMap id="RolesEntity" type="cn.konngo.entity.RolesEntity">
+
+                <result property="id" column="id"/>
+                <result property="name" column="name"/>
+
+    </resultMap>
+
+    <select id="list" resultMap="RolesEntity">
+        SELECT * from roles ;
+    </select>
+
+    <select id="select" resultMap="RolesEntity">
+        select * from roles where id=#{id}
+    </select>
+
+    <select id="listByUsers" resultMap="RolesEntity">
+        select r.* from roles r join userroles u on r.id=u.roleid  where u.userid=#{id}
+    </select>
+
+    <insert id="insert" >
+        insert into roles
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id!=null" >id,</if>
+                <if test="name!=null" >name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id!=null" >#{
+                    id},</if>
+                <if test="name!=null" >#{
+                    name},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update roles
+        <set>
+            <trim  suffixOverrides=",">
+                <if test="id!=null" >id=#{id},</if>
+                <if test="name!=null" >name=#{name},</if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from roles where id=#{id}
+    </delete>
+
+</mapper>

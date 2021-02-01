@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.konngo.dao.UsersDao">
+
+    <resultMap id="UsersEntity" type="cn.konngo.entity.UsersEntity">
+
+                <result property="id" column="id"/>
+                <result property="username" column="username"/>
+                <result property="nickname" column="nickname"/>
+                <result property="password" column="password"/>
+                <result property="usertype" column="usertype"/>
+                <result property="gender" column="gender"/>
+                <result property="address" column="address"/>
+                <result property="avatar" column="avatar"/>
+
+    </resultMap>
+
+    <select id="list" resultMap="UsersEntity">
+        SELECT * from users ;
+    </select>
+
+    <select id="select" resultMap="UsersEntity">
+        select * from users where id=#{id}
+    </select>
+
+    <select id="getByUserName" resultMap="UsersEntity">
+        select * from users where username=#{username}
+    </select>
+
+    <insert id="insert" >
+        insert into users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id!=null" >id,</if>
+                <if test="username!=null" >username,</if>
+                <if test="nickname!=null" >nickname,</if>
+                <if test="password!=null" >password,</if>
+                <if test="usertype!=null" >usertype,</if>
+                <if test="gender!=null" >gender,</if>
+                <if test="address!=null" >address,</if>
+                <if test="avatar!=null" >avatar,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id!=null" >#{
+                    id},</if>
+                <if test="username!=null" >#{
+                    username},</if>
+                <if test="nickname!=null" >#{
+                    nickname},</if>
+                <if test="password!=null" >#{
+                    password},</if>
+                <if test="usertype!=null" >#{
+                    usertype},</if>
+                <if test="gender!=null" >#{
+                    gender},</if>
+                <if test="address!=null" >#{
+                    address},</if>
+                <if test="avatar!=null" >#{
+                    avatar},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update users
+        <set>
+            <trim  suffixOverrides=",">
+                <if test="id!=null" >id=#{id},</if>
+                <if test="username!=null" >username=#{username},</if>
+                <if test="nickname!=null" >nickname=#{nickname},</if>
+                <if test="password!=null" >password=#{password},</if>
+                <if test="usertype!=null" >usertype=#{usertype},</if>
+                <if test="gender!=null" >gender=#{gender},</if>
+                <if test="address!=null" >address=#{address},</if>
+                <if test="avatar!=null" >avatar=#{avatar},</if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from users where id=#{id}
+    </delete>
+
+</mapper>

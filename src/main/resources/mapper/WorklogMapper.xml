@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.konngo.dao.WorklogDao">
+
+    <resultMap id="WorklogEntity" type="cn.konngo.entity.WorklogEntity">
+
+                <result property="id" column="id"/>
+                <result property="name" column="name"/>
+                <result property="content" column="content"/>
+                <result property="userid" column="userid"/>
+
+    </resultMap>
+
+    <select id="list" resultMap="WorklogEntity">
+        SELECT * from worklog ;
+    </select>
+
+    <select id="select" resultMap="WorklogEntity">
+        select * from worklog where id=#{id}
+    </select>
+
+    <insert id="insert" >
+        insert into worklog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id!=null" >id,</if>
+                <if test="name!=null" >name,</if>
+                <if test="content!=null" >content,</if>
+                <if test="userid!=null" >userid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id!=null" >#{
+                    id},</if>
+                <if test="name!=null" >#{
+                    name},</if>
+                <if test="content!=null" >#{
+                    content},</if>
+                <if test="userid!=null" >#{
+                    userid},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update worklog
+        <set>
+            <trim  suffixOverrides=",">
+                <if test="id!=null" >id=#{id},</if>
+                <if test="name!=null" >name=#{name},</if>
+                <if test="content!=null" >content=#{content},</if>
+                <if test="userid!=null" >userid=#{userid},</if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from worklog where id=#{id}
+    </delete>
+
+</mapper>
