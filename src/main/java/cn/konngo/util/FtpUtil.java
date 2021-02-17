@@ -14,7 +14,7 @@ public class FtpUtil {
     public static final String username="demoftp";
     public static final String password="YxSs64TDZYmM6mnS";
     public static final String basePath="/";
-    public static final String filePath="demo120901";
+    public static final String filePath="demo011701";
     public static final String server="http://ftp.konngo.cn/"+filePath+"/";
 
     //上传文件

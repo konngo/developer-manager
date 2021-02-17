@@ -159,42 +159,119 @@
 <!--                    </div>-->
 <!--                </div>-->
 
-<!--                <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">-->
-<!--                    <i class="simple-icon-size-fullscreen"></i>-->
-<!--                    <i class="simple-icon-size-actual"></i>-->
-<!--                </button>-->
+                <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">
+                    <i class="simple-icon-size-fullscreen"></i>
+                    <i class="simple-icon-size-actual"></i>
+                </button>
 
-<!--            </div>-->
+             </div>
 
             <div class="user d-inline-block">
                 <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                    <span class="name">{{localStorage.getItem("username")}}</span>
+                    <span class="name">{{users.nickname}}</span>
                     <span>
-                        <img alt="Profile Picture" src="img/profiles/l-1.jpg" />
+                        <img alt="Profile Picture" :src="users.avatar" />
                     </span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right mt-3">
                     <a class="dropdown-item" href="#" @click="profile">个人中心</a>
+                    <a class="dropdown-item" href="#" @click="skills">技能</a>
                     <a class="dropdown-item" href="#" @click="logout">退出登录</a>
                 </div>
             </div>
         </div>
     </nav>
     <div class="menu">
+<!--        <div class="main-menu">-->
+<!--            <div class="scroll">-->
+<!--                <ul class="list-unstyled">-->
+<!--                    <main-menu :item="item" v-on:changemenu="changemenu" v-for="item in menulist"></main-menu>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="sub-menu">-->
+<!--            <div class="scroll">-->
+<!--                <sub-menu :item="item" v-on:changemenu="changemenu"  v-for="item in submenus" ></sub-menu>-->
+<!--            </div>-->
+<!--        </div>-->
+
         <div class="main-menu">
             <div class="scroll">
                 <ul class="list-unstyled">
-                    <main-menu :item="item" v-on:changemenu="changemenu" v-for="item in menulist"></main-menu>
+                    <li>
+                        <a @click="changemenu('main')" >
+                            <i class="iconsminds-shop-4"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="changemenu('users/page')" v-show="chooseTarget('员工')">
+                            <i class="simple-icon-user-female"></i>
+                            <span>员工</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="changemenu('roles/page')" v-show="chooseTarget('岗位')">
+                            <i class="iconsminds-bus-2"></i>
+                            <span>岗位</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="changemenu('labels/page')"  v-show="chooseTarget('标签')">
+                            <i class="iconsminds-air-balloon-1"></i>
+                            <span>标签</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#skills"  v-show="chooseTarget('技能')">
+                            <i class="iconsminds-roof"></i>
+                            <span>技能</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="changemenu('bugresolve/show')"  v-show="!chooseTarget('bug')">
+                            <i class="iconsminds-sunglasses-w-3"></i>
+                            <span>BUG解决方案</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="changemenu('bugresolve/page')"  v-show="chooseTarget('bug')">
+                            <i class="iconsminds-sunglasses-w-3"></i>
+                            <span>BUG解决方案</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="changemenu('worklog/show')"  v-show="!chooseTarget('日志')">
+                            <i class="iconsminds-sunglasses-w-3"></i>
+                            <span>工作日志</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="changemenu('worklog/page')"  v-show="chooseTarget('日志')">
+                            <i class="iconsminds-sunglasses-w-3"></i>
+                            <span>工作日志</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
 
         <div class="sub-menu">
             <div class="scroll">
-                <sub-menu :item="item" v-on:changemenu="changemenu"  v-for="item in submenus" ></sub-menu>
-
-
+                <ul class="list-unstyled" data-link="skills">
+                    <li>
+                        <a @click="changemenu('skilltype/page')">
+                            <i class="simple-icon-rocket"></i> <span class="d-inline-block">技能分类</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="changemenu('skills/page')">
+                            <i class="simple-icon-rocket"></i> <span class="d-inline-block">技能</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

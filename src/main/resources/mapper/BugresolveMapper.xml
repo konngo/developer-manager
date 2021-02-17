@@ -9,6 +9,9 @@
                 <result property="id" column="id"/>
                 <result property="name" column="name"/>
                 <result property="content" column="content"/>
+                <result property="avatar" column="avatar"/>
+                <result property="userid" column="userid"/>
+                <result property="labels" column="labels"/>
 
     </resultMap>
 
@@ -23,17 +26,23 @@
     <insert id="insert" >
         insert into bugresolve
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id!=null" >id,</if>
                 <if test="name!=null" >name,</if>
                 <if test="content!=null" >content,</if>
+                <if test="avatar!=null" >avatar,</if>
+                <if test="userid!=null" >userid,</if>
+                <if test="labels!=null" >labels,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id!=null" >#{
-                    id},</if>
                 <if test="name!=null" >#{
                     name},</if>
                 <if test="content!=null" >#{
                     content},</if>
+                <if test="avatar!=null" >#{
+                    avatar},</if>
+                <if test="userid!=null" >#{
+                    userid},</if>
+                <if test="labels!=null" >#{
+                    labels},</if>
         </trim>
     </insert>
 
@@ -41,9 +50,11 @@
         update bugresolve
         <set>
             <trim  suffixOverrides=",">
-                <if test="id!=null" >id=#{id},</if>
                 <if test="name!=null" >name=#{name},</if>
                 <if test="content!=null" >content=#{content},</if>
+                <if test="avatar!=null" >avatar=#{avatar},</if>
+                <if test="userid!=null" >userid=#{userid},</if>
+                <if test="labels!=null" >labels=#{labels},</if>
             </trim>
         </set>
         where id=#{id}

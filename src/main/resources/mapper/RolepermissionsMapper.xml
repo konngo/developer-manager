@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.konngo.dao.RolepermissionsDao">
+
+    <resultMap id="RolepermissionsEntity" type="cn.konngo.entity.RolepermissionsEntity">
+
+                <result property="id" column="id"/>
+                <result property="roleid" column="roleid"/>
+                <result property="perid" column="perid"/>
+
+    </resultMap>
+
+    <select id="list" resultMap="RolepermissionsEntity">
+        SELECT * from rolepermissions ;
+    </select>
+
+    <select id="select" resultMap="RolepermissionsEntity">
+        select * from rolepermissions where id=#{id}
+    </select>
+
+    <insert id="insert" >
+        insert into rolepermissions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="roleid!=null" >roleid,</if>
+                <if test="perid!=null" >perid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+                <if test="roleid!=null" >#{
+                    roleid},</if>
+                <if test="perid!=null" >#{
+                    perid},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update rolepermissions
+        <set>
+            <trim  suffixOverrides=",">
+                <if test="roleid!=null" >roleid=#{roleid},</if>
+                <if test="perid!=null" >perid=#{perid},</if>
+            </trim>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from rolepermissions where id=#{id}
+    </delete>
+
+</mapper>

@@ -39,4 +39,8 @@ public interface RolesDao {
 
     // 获取角色
     List<RolesEntity> listByUsers(int id);
+
+    RolesEntity selectByUser(int id);
+
+    void addUserRole(int id, int type);
 }

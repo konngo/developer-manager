@@ -15,7 +15,18 @@ public class WorklogEntity implements Serializable{
         private String content;
         //用户
         private int userid;
+        //封面
+        private String avatar;
+        // 标签
+        private int labels;
 
+        public int getLabels() {
+            return labels;
+        }
+
+        public void setLabels(int labels) {
+            this.labels = labels;
+        }
 
         public int getId() {
             return id;
@@ -50,6 +61,15 @@ public class WorklogEntity implements Serializable{
 
         public void setUserid(int userid) {
             this.userid = userid;
+        }
+
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
         }
 
 

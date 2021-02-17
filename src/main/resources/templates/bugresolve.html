@@ -72,37 +72,12 @@
 <body  class="show-spinner">
 <div id="app">
 
-    <div class="container-fluid" v-show="show">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <h1>BUG解决方案管理</h1>
 
-                <div class="top-right-button-container">
-                    <div class="btn-group">
-                        <button  class="btn btn-outline-primary mb-1" @click="showAddItem" type="button">
-                            添加
-                        </button>
 
-                        <button class="btn btn-outline-primary mb-1" type="button" @click="showUpdateItem">
-                            编辑
-                        </button>
-
-                        <button class="btn btn-outline-primary mb-1" type="button" @click="deleteItem()">
-                            删除
-                        </button>
-
-                        <button class="btn btn-outline-primary mb-1 dropdown-toggle" type="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            导出
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" id="dataTablesCopy" href="#">Copy</a>
-                            <a class="dropdown-item" id="dataTablesExcel" href="#">Excel</a>
-                            <a class="dropdown-item" id="dataTablesCsv" href="#">Csv</a>
-                            <a class="dropdown-item" id="dataTablesPdf" href="#">Pdf</a>
-                        </div>
-                    </div>
-                </div>
 
                 <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                     <ol class="breadcrumb pt-0">
@@ -114,65 +89,42 @@
                         </li>
                     </ol>
                 </nav>
-                <div class="mb-2">
-                    <a class="btn pt-0 pl-0 d-inline-block d-md-none" data-toggle="collapse" href="#displayOptions"
-                       role="button" aria-expanded="true" aria-controls="displayOptions">
-                        显示操作
-                        <i class="simple-icon-arrow-down align-middle"></i>
-                    </a>
-                    <div class="collapse dont-collapse-sm" id="displayOptions">
-                        <div class="d-block d-md-inline-block">
-                            <div class="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-                                <input class="form-control" placeholder="查询" id="searchDatatable">
+
+                <div class="separator"></div>
+
+                <button type="button" class="btn btn-light default mb-1" @click="showAddItem()">发布新bug解决方案</button>
+            </div>
+        </div>
+
+        <br><br>
+        <div class="row"  v-show="show">
+            <div class="col-12">
+                <div class="row listing-card-container" >
+                    <div class="col-3"  v-for="item in bugresolve" :key="item">
+                        <div class="card ">
+                            <div class="position-relative">
+                                <img class="card-img-left" :src="item.avatar" alt="Card image cap" style="height: 150px;">
+                                <span class="badge badge-pill badge-theme-1 position-absolute badge-top-left" v-html="filterLabel(item.labels)"></span>
                             </div>
-                        </div>
-                        <div class="float-md-right dropdown-as-select" id="pageCountDatatable">
-                            <span class="text-muted text-small">单页展示行数</span>
-                            <button class="btn btn-outline-dark btn-xs dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                10
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">5</a>
-                                <a class="dropdown-item active" href="#">10</a>
-                                <a class="dropdown-item" href="#">20</a>
+                            <div class="card-body">
+                                <a :href="'bugresolve/details?id='+item.id">
+                                    <h6 class="mb-3 listing-heading ellipsis"><div style="margin: 0px; padding: 0px; border: 0px;">
+                                        {{item.name}}
+                                    </div></h6>
+                                </a>
+                                <footer v-html="filterName(item.userid)">
+
+                                </footer>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="separator"></div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 mb-4 data-table-rows data-tables-hide-filter">
-                <table id="datatableRows"
-                       data-tableheader='bug_header'
-                       data-ajax="/bugresolve/list"
-                       class="data-table responsive nowrap">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>bug名称</th>
-                        <th>内容</th>
-                        <th>封面</th>
-                        <th>标签</th>
-                        <th>用户</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tbody">
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="container-fluid" v-show="!show">
-        <div class="row">
+        <div class="row" v-show="!show">
             <div class="col-12">
-
 
                 <div class="card mb-4">
                     <div class="card-body">
@@ -228,7 +180,9 @@
 
             </div>
         </div>
+
     </div>
+
 </div>
 </body>
 
@@ -243,10 +197,14 @@
         el:'#app',
         data(){
             return {
-                show:true,
-                action:0, // action 为1时进行添加，为2时进行修改
                 bugresolve:[],
+                users:[],
+                seachtext:'',
+                label:{},
+                show:true,
+                bug : {},
                 labels:[],
+                alluser:[],
             }
         },
         methods:{
@@ -270,27 +228,47 @@
                     }
                 });
             },
+            getAlluser(){
+                // 获取所有用户
+                let self = this
+                $.ajax({
+                    type: 'POST',
+                    url: host+"users/list",
+                    data: {},
+                    success: function (response){
+                        if(response.code==0){
+                            self.alluser=response.aaData;
+                        }else{
+                            showNotify('top', 'center', "danger","结果","获取角色信息失败，请联系管理员。");
+                        }
+                    }
+                });
+            },
+            showAddItem(){
+                //显示添加界面
+                this.show=false;
+                // 清空
+                this.bug={}
+            },
+
             addItem(){
                 // 获取图片地址
                 var imgdata=imghost+tempimg.data;
-
                 if (tempimg.data==""){
-                    imgdata=this.bugresolve.avatar
+                    imgdata=this.bug.avatar
                 }
 
                 $.ajax({
                     type: 'POST',
                     url: host+"bugresolve/addOrUpdate",
                     data: {
-                        id:this.bugresolve.id,
-                        name:this.bugresolve.name,
+                        id:this.bug.id,
+                        name:this.bug.name,
                         content:ckEditor.getData().toString(),
                         avatar:imgdata,
-                        userid:this.bugresolve.userid,
-                        labels:this.bugresolve.labels
+                        userid:this.bug.userid
                     },
                     success: function (response){
-                        console.log(response)
                         if(response.code==0){
                             showNotify('top', 'center', "success","结果","保存成功！");
                             datatableRow.ajax.reload();
@@ -301,58 +279,79 @@
                 });
 
             },
-            cancleEdit(){
-                // 返回表格
-                this.show=true;
+            filterName(id){
+                var name = "admin"
+                for(var i = 0 ; i< this.alluser.length ; i++){
+                    if (id = this.alluser[i].id){
+                        name = this.alluser[i].nickname
+                    }
+                }
+                return name;
             },
-            deleteItem(){
-                this.bugresolve=datatableRow.rows('.selected').data();
-
+            filterLabel(id){
+                var name = ""
+                for(var i = 0 ; i< this.labels.length ; i++){
+                    if (id = this.labels[i].id){
+                        name = this.labels[i].name
+                    }
+                }
+                return name;
+            },
+            filterByName(bugresolve,name){
+                return bugresolve.filter(item => item.name == name)
+            },
+            searchtest(){
+                this.init();
+            },
+            init (){
+                var self=this;
                 $.ajax({
                     type: 'POST',
-                    url: host+"bugresolve/delete",
-                    data: {
-                        id:this.bugresolve[0].id
-                    },
+                    url: host+"bugresolve/list",
+                    data: {},
                     success: function (response){
-                        console.log(response)
                         if(response.code==0){
-                            showNotify('top', 'center', "success","结果","删除成功！");
-                            datatableRow.ajax.reload();
+                            self.bugresolve=response.aaData;
+                            if (self.seachtext!=''){
+                                let name = self.seachtext
+                                let demo=self.bugresolve.filter(item=> item.title.indexOf(name)!=-1);
+                                self.bugresolve=demo
+                            }
                         }else{
-                            showNotify('top', 'center', "danger","结果","删除失败，请重新尝试。");
+                            showNotify('top', 'center', "danger","结果","服务器连接异常，请重新尝试。");
                         }
                     }
                 });
-
+                $.ajax({
+                    type: 'POST',
+                    url: host+"users/list",
+                    data: {},
+                    success: function (response){
+                        if(response.code==0){
+                            self.users=response.aaData;
+                            console.log(self.users)
+                        }else{
+                            showNotify('top', 'center', "danger","结果","服务器连接异常，请重新尝试。");
+                        }
+                    }
+                });
             },
-            showUpdateItem(){
-                // 显示修改界面
-                console.log(datatableRow.rows('.selected').data());
-                var choose=datatableRow.rows('.selected').data();
-                if (choose.length>1){
-                    showNotify('top', 'center', "warning","提示","只能编辑一条数据哦！");
-                    return ;
-                }
-                if (choose.length==0){
-                    showNotify('top', 'center', "warning","提示","请选择要编辑的数据哦！");
-                    return ;
-                }
-                this.bugresolve=choose[0];
-                ckEditor.setData(this.bugresolve.content);
-                this.show=false;
-                this.action=1;
-            },
-            showAddItem(){
-                //显示添加界面
-                this.show=false;
-                this.action=2;
-                // 清空
-                this.bugresolve={}
+            formateUser(id){
+                let nickname='' ;
+                this.users.forEach(item=>{
+                    if (item.id=id){
+                        username=item.nickname
+                    }
+                })
+                return nickname;
             }
+        },
+        mounted(){
+            this.init();
         },
         created(){
             this.getAllLabels();
+            this.getAlluser();
         }
     })
 

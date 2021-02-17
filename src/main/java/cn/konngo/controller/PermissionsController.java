@@ -1,15 +1,25 @@
 package cn.konngo.controller;
 
+import cn.konngo.common.Permissions;
 import cn.konngo.entity.PermissionsEntity;
+import cn.konngo.entity.RolesEntity;
+import cn.konngo.entity.UsersEntity;
 import cn.konngo.service.PermissionsService;
+import cn.konngo.service.RolesService;
+import cn.konngo.service.UsersService;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +28,37 @@ import java.util.Map;
 @RequestMapping("/permissions")
 // 权限 控制层
 public class PermissionsController {
+
+    @Autowired
+    UsersService usersService;
     @Autowired
     PermissionsService permissionsService;
+    @Autowired
+    RolesService rolesService;
+
+
+    @RequestMapping("changePermission")
+    @ResponseBody
+    // 返回所有权限
+    public Map changePermission(String permissions){
+        List<Permissions> list= JSONObject.parseArray(permissions,Permissions.class);
+        System.out.println(list);
+        Map map=new HashMap();
+        map.put("code","0");
+        map.put("msg","");
+        for (Permissions p: list) {
+            // 拼接permission对象
+            PermissionsEntity per=new PermissionsEntity();
+            per.setId(p.getId());
+            per.setName(per.getName());
+            int add = p.isAdd() == true ? 0 : 1 ;
+            int update = p.isUpdate() == true ? 0 : 1 ;
+            int delete = p.isDelete() == true ? 0 : 1 ;
+            per.setOthers(add+","+update+","+delete);
+            permissionsService.update(per);
+        }
+        return map;
+    }
 
 
     @RequestMapping("list")
@@ -30,6 +69,36 @@ public class PermissionsController {
         map.put("code","0");
         map.put("msg","");
         List list=permissionsService.list();
+        map.put("count",list.size());
+        map.put("aaData",list);
+        return map;
+    }
+
+    @RequestMapping("listByRoles")
+    @ResponseBody
+    // 返回对应角色权限
+    public Map listByRoles(int id){
+        Map map=new HashMap();
+        map.put("code","0");
+        map.put("msg","");
+        List list=permissionsService.listByRoles(id);
+        map.put("count",list.size());
+        map.put("aaData",list);
+        return map;
+    }
+
+
+    @RequestMapping("nowuser")
+    @ResponseBody
+    // 返回当前用户对应角色权限
+    public Map nowuser(){
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        UsersEntity usersEntity=usersService.login(username);
+        RolesEntity roles=rolesService.selectByUser(usersEntity.getId());
+        Map map=new HashMap();
+        map.put("code","0");
+        map.put("msg","");
+        List list=permissionsService.listByRoles(roles.getId());
         map.put("count",list.size());
         map.put("aaData",list);
         return map;

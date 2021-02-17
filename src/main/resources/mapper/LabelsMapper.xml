@@ -37,7 +37,6 @@
         update labels
         <set>
             <trim  suffixOverrides=",">
-                <if test="id!=null" >id=#{id},</if>
                 <if test="name!=null" >name=#{name},</if>
             </trim>
         </set>

@@ -16,6 +16,10 @@
         SELECT * from skills ;
     </select>
 
+    <select id="listByUser" resultMap="SkillsEntity">
+        SELECT s.* from skills s join userskills u on s.id=u.skillid where u.userid= #{id};
+    </select>
+
     <select id="select" resultMap="SkillsEntity">
         select * from skills where id=#{id}
     </select>
@@ -41,7 +45,6 @@
         update skills
         <set>
             <trim  suffixOverrides=",">
-                <if test="id!=null" >id=#{id},</if>
                 <if test="type!=null" >type=#{type},</if>
                 <if test="name!=null" >name=#{name},</if>
             </trim>

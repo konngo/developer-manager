@@ -7,11 +7,13 @@
     <resultMap id="PermissionsEntity" type="cn.konngo.entity.PermissionsEntity">
                 <result property="id" column="id"/>
                 <result property="name" column="name"/>
+                <result property="others" column="others"/>
     </resultMap>
 
     <select id="list" resultMap="PermissionsEntity">
-        SELECT * from permissions ;
+        SELECT  * from permissions ;
     </select>
+
 
     <select id="select" resultMap="PermissionsEntity">
         select * from permissions where id=#{id}
@@ -20,17 +22,17 @@
         select p.* from permissions p join rolepermissions r on r.perid=p.id where r.roleid=#{id}
     </select>
 
-    <insert id="insert" >
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id">
         insert into permissions
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id!=null" >id,</if>
                 <if test="name!=null" >name,</if>
+                <if test="others!=null" >others,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id!=null" >#{
-                    id},</if>
                 <if test="name!=null" >#{
                     name},</if>
+                <if test="others!=null" >#{
+                    others}</if>
         </trim>
     </insert>
 
@@ -38,8 +40,8 @@
         update permissions
         <set>
             <trim  suffixOverrides=",">
-                <if test="id!=null" >id=#{id},</if>
                 <if test="name!=null" >name=#{name},</if>
+                <if test="others!=null" >others=#{others}</if>
             </trim>
         </set>
         where id=#{id}

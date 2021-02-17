@@ -11,9 +11,25 @@ public class PermissionsEntity implements Serializable{
         private int id;
         //权限名称
         private String name;
+        //增删改查
+        private String others;
 
 
-        public int getId() {
+    public PermissionsEntity() {
+    }
+
+    public PermissionsEntity(String name, String others) {
+        this.name = name;
+        this.others = others;
+    }
+
+    public PermissionsEntity(int id, String name, String others) {
+        this.id = id;
+        this.name = name;
+        this.others = others;
+    }
+
+    public int getId() {
             return id;
         }
 
@@ -31,4 +47,11 @@ public class PermissionsEntity implements Serializable{
         }
 
 
+        public String getOthers() {
+            return others;
+        }
+
+        public void setOthers(String others) {
+            this.others = others;
+        }
 }

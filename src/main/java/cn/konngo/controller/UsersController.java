@@ -1,6 +1,7 @@
 package cn.konngo.controller;
 
 import cn.konngo.entity.UsersEntity;
+import cn.konngo.service.RolesService;
 import cn.konngo.service.UsersService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import java.util.Map;
 public class UsersController {
     @Autowired
     UsersService usersService;
+    @Autowired
+    RolesService rolesService;
 
 
     @RequestMapping("list")
@@ -59,6 +62,19 @@ public class UsersController {
         return map;
     }
 
+    // 获取当前用户头像
+    @RequestMapping("avatar")
+    @ResponseBody
+    public Map avatar(){
+        Map map=new HashMap();
+        map.put("code","0");
+        map.put("msg","");
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        UsersEntity usersEntity=usersService.login(username);
+        map.put("avatar",usersEntity.getAvatar());
+        return map;
+    }
+
 
     @RequestMapping("delete")
     @ResponseBody
@@ -80,6 +96,9 @@ public class UsersController {
         int count=0;
         // 根据id进行判断，如果id为空或者0进行添加操作，否则进行修改
         if ((""+usersEntity.getId()).equals("")||usersEntity.getId()==0){
+            // 设置用户角色
+            String type = usersEntity.getUsertype();
+            rolesService.addUserRole(usersEntity.getId(),type);
             count=usersService.insert(usersEntity);
         }else {
             count=usersService.update(usersEntity);
@@ -94,4 +113,6 @@ public class UsersController {
     public String page(){
          return "userslist";
     }
+
+
 }

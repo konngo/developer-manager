@@ -37,4 +37,5 @@ public interface SkillsDao {
     */
     int insert(SkillsEntity skillsEntity);
 
+    List listByUser(int id);
 }

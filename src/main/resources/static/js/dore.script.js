@@ -51,11 +51,58 @@ Table of Contents
 */
 
 /* 00. host*/
-var host='http://localhost:8080/';
+var host='http://localhost:8888/';
 var imghost="http://ftp.konngo.cn/demo011701/";
 var tempimg="";
 var dropimgzone=null;
 var ckEditor = null;
+
+// 初始化Permission
+function initPermission(permissions){
+  var target = []
+  for (let i = 0 ; i < permissions.length ; i++){
+    var p = {} , permission = permissions[i] , str =permissions[i].others ;
+    var s = str.split(",");
+    s[0] == '0' ? p.add = true : p.add = false
+    s[1] == '0' ? p.update = true : p.update = false
+    s[2] == '0' ? p.delete = true : p.delete = false
+    p.name = permission.name
+    p.id = permission.id
+    target.push(p)
+  }
+  return target
+}
+
+function checkPermission(p){
+  var demo = {}
+  var target = []
+  $.ajax({
+    type: 'POST',
+    url: host + "permissions/nowuser",
+    data: { },
+    success: function (response) {
+      if (response.code == 0) {
+        var permissions = response.aaData
+        target = initPermission(permissions)
+      }
+    }
+  });
+
+  for ( var i = 0; i< target.length; i++){
+    if (p.id == target[i].id){
+      demo = target[i]
+    }
+  }
+  return demo;
+}
+
+
+
+/* 00.Util*/
+var removeAllHTML=function (str){
+  var regex = /(<([^>]+)>)/ig
+  return str.replace(regex,"")
+}
 
 /* 01. Utils */
 $.fn.addCommas = function (nStr) {
@@ -3001,8 +3048,145 @@ $.dore = function (element, options) {
         },
       });
 
+      var roles= [];
+      function getAllRole(){
+        $.ajax({
+          type: 'POST',
+          url: host+"roles/list",
+          data: {},
+          success: function (response){
+            if(response.code==0){
+              roles=response.aaData;
+            }else{
+              showNotify('top', 'center', "danger","结果","获取角色信息失败，请联系管理员。");
+            }
+          }
+        });
+      }
+
+      var getUserRole=function (data){
+        var role="guanliyuan";
+        for (var i = 0 ; i < roles.length ; i++){
+          if ( data == roles[i].id ){
+            role = roles[i].name
+          }
+        }
+        return role;
+      }
+
+      var alluser=[]
+      function  getAllUser(){
+        $.ajax({
+          type: 'POST',
+          url: host+"users/list",
+          data: {},
+          success: function (response){
+            if(response.code==0){
+              alluser=response.aaData;
+            }else{
+              showNotify('top', 'center', "danger","结果","获取用户信息失败，请联系管理员。");
+            }
+          }
+        });
+      }
+
+      var labels=[]
+      function  getAllLabels(){
+        $.ajax({
+          type: 'POST',
+          url: host+"labels/list",
+          data: {},
+          success: function (response){
+            if(response.code==0){
+              labels=response.aaData;
+            }else{
+              showNotify('top', 'center', "danger","结果","获取用户信息失败，请联系管理员。");
+            }
+          }
+        });
+      }
+
+
+      getAllUser();
+      getAllRole();
+      getAllLabels();
 
       var header=$("#datatableRows").data('tableheader');
+
+      //
+      let user_header = [
+        {"data":"id"},
+        {"data":"username"},
+        {"data":"password"},
+        {"data":"nickname"},
+        {"data":"usertype","render":function  ( data, type, full, meta ) {return getUserRole(data);}
+        },
+        {"data":"gender"},
+        {"data":"address"},
+        {"data":"avatar","render":function  ( data, type, full, meta ) {
+            return "<img src='"+data+"'  class=\"img-thumbnail list-thumbnail xsmall border-0 rounded-circle\"></img>";
+          }
+        }
+      ];
+
+      let bug_header = [
+        {"data":"id"},
+        {"data":"name"},
+        {"data":"content"},
+        {"data":"avatar","render":function  ( data, type, full, meta ) {
+            return "<img src='"+data+"'  class=\"img-thumbnail list-thumbnail xsmall border-0 rounded-circle\"></img>";
+          }
+        },
+        {"data":"labels","render":function  ( data, type, full, meta ) {
+            var name  = "无"
+            for ( var i = 0 ; i < labels.length; i++){
+              if (labels[i].id = data){
+                name = labels[i].name
+              }
+            }
+            return name;
+          }
+          },
+        {"data":"userid","render":function  ( data, type, full, meta ) {
+            var name  = "张三"
+            for ( var i = 0 ; i < alluser.length; i++){
+              if (alluser[i].id = data){
+                name = alluser[i].nickname
+              }
+            }
+            return name;
+          }
+        }
+      ];
+      let log_header = [
+        {"data":"id"},
+        {"data":"name"},
+        {"data":"content"},
+        {"data":"labels","render":function  ( data, type, full, meta ) {
+            var name  = "无"
+            for ( var i = 0 ; i < labels.length; i++){
+              if (labels[i].id = data){
+                name = labels[i].name
+              }
+            }
+            return name;
+          }
+        },
+        {"data":"userid","render":function  ( data, type, full, meta ) {
+            var name  = "张三"
+            for ( var i = 0 ; i < alluser.length; i++){
+              if (alluser[i].id = data){
+                name = alluser[i].nickname
+              }
+            }
+            return name;
+          }
+          },
+        {"data":"avatar","render":function  ( data, type, full, meta ) {
+            return "<img src='"+data+"'  class=\"img-thumbnail list-thumbnail xsmall border-0 rounded-circle\"></img>";
+          }
+        }
+      ];
 
       var temp_header=[
         {"data":"id"},
@@ -3017,6 +3201,18 @@ $.dore = function (element, options) {
 
       if(header=='temp_header'){
         header=temp_header;
+      }
+      if(header=='user_header'){
+        getAllRole();
+        header=user_header;
+      }
+      if(header=='bug_header'){
+        getAllUser();
+        header=bug_header;
+      }
+      if(header=='log_header'){
+        getAllUser();
+        header=log_header;
       }
 
       // Datatable with rows

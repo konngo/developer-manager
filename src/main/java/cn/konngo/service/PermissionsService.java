@@ -30,4 +30,7 @@ public class PermissionsService {
     // 更新权限
     public int update (PermissionsEntity permissionsEntity){ return permissionsDao.update(permissionsEntity);}
 
+    public List listByRoles(int id) {
+        return permissionsDao.listByRoles(id);
+    }
 }

@@ -90,4 +90,15 @@ public class WorklogController {
     public String page(){
          return "workloglist";
     }
+
+    @RequestMapping("show")
+    public String show(){
+         return "worklog";
+    }
+
+    @RequestMapping("details")
+    public String details(HttpServletRequest request,int id){
+        request.setAttribute("id",id);
+        return "logdetails";
+    }
 }

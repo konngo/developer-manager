@@ -32,6 +32,11 @@ public class IndexController {
         return "profile";
     }
 
+    @RequestMapping("skills")
+    public String skills(){
+        return "skills";
+    }
+
     @RequestMapping("/file-upload")
     @ResponseBody
     public Map upload(@RequestParam("file") MultipartFile file) {

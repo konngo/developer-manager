@@ -187,7 +187,8 @@
 
 
                         <button  class="btn btn-primary btn-lg btn-shadow" @click="addItem">提交</button>
-                        <button  class="btn btn-primary btn-lg btn-shadow" @click="addItem">设置权限</button>
+                        <button v-show="isupdate"  class="btn btn-primary btn-lg btn-shadow" data-toggle="modal"
+                                data-target="#permissionModal" data-whatever="@mdo">设置权限</button>
                         <button  class="btn btn-primary btn-lg btn-shadow" @click="reback">返回</button>
 
 
@@ -195,6 +196,55 @@
                 </div>
 
 
+            </div>
+        </div>
+    </div>
+
+    <!-- modal -->
+    <div class="modal fade" id="permissionModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalContentLabel">设置权限</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">添加</th>
+                                <th scope="col">修改</th>
+                                <th scope="col">删除</th>
+                            </tr>
+                        <tbody>
+                            <tr v-for="(item,index) in target" :key="item">
+                                <th>{{item.name}}</th>
+                                <td>
+                                    <input type="checkbox"  v-model="item.add">
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="item.update">
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="item.delete">
+                                </td>
+                            </tr>
+                        </tbody>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <span style="color:red">
+                        {{msg}}
+                    </span>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" @click="changePermission">修改权限</button>
+                </div>
             </div>
         </div>
     </div>
@@ -215,11 +265,34 @@
                 show:true,
                 action:0, // action 为1时进行添加，为2时进行修改
                 roles:[],
+                isupdate:false,
+                permissions: [],
+                target: [],
+                msg:""
             }
         },
         methods:{
             reback(){
                 this.show=true;
+            },
+            changePermission(){
+                var self = this
+                console.log(JSON.stringify(self.target))
+                $.ajax({
+                    type: 'POST',
+                    url: host+"permissions/changePermission",
+                    data: {
+                        permissions:JSON.stringify(self.target)
+                    },
+                    success: function (response){
+                        if(response.code==0){
+                            self.msg="修改成功!"
+                            datatableRow.ajax.reload();
+                        }else{
+                        }
+                    }
+                });
+
             },
             addItem(){
 
@@ -283,6 +356,11 @@
                 this.roles=choose[0];
                 this.show=false;
                 this.action=1;
+                this.isupdate = true
+                this.msg=""
+
+                // 获取角色对应权限
+                this.getPermissionByRoles(this.roles.id)
             },
             showAddItem(){
                 //显示添加界面
@@ -290,7 +368,47 @@
                 this.action=2;
                 // 清空
                 this.roles={}
-            }
+                this.isupdate=false
+            },
+            // 获取所有权限
+            getAllPermission(){
+                var self = this
+                $.ajax({
+                    type: 'POST',
+                    url: host+"permissions/list",
+                    data: {},
+                    success: function (response){
+                        if(response.code==0){
+                            self.permissions = response.aaData
+                        }else{
+                            showNotify('top', 'center', "danger","结果","获取权限信息失败，请联系管理员。");
+                        }
+                    }
+                });
+            },
+            // 获取角色对应权限
+            getPermissionByRoles(id){
+                var self = this
+                $.ajax({
+                    type: 'POST',
+                    url: host+"permissions/listByRoles",
+                    data: {
+                        id:id
+                    },
+                    success: function (response){
+                        if(response.code==0){
+                            self.permissions= response.aaData
+                            self.target = initPermission(self.permissions)
+                            console.log(self.target)
+                        }else{
+                            showNotify('top', 'center', "danger","结果","获取权限信息失败，请联系管理员。");
+                        }
+                    }
+                });
+            },
+
+        },
+        mounted(){
         }
     })
 

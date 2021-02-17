@@ -149,16 +149,7 @@
         <div class="row">
             <div class="col-12 mb-4 data-table-rows data-tables-hide-filter">
                 <table id="datatableRows"
-                       data-tableheader='[
-                                {"data":"id"},
-                                {"data":"username"},
-                                {"data":"password"},
-                                {"data":"nickname"},
-                                {"data":"usertype"},
-                                {"data":"gender"},
-                                {"data":"address"},
-                                {"data":"avatar"}
-                    ]'
+                       data-tableheader='user_header'
                        data-ajax="/users/list"
                        class="data-table responsive nowrap">
                     <thead>
@@ -204,7 +195,10 @@
                             <input class="form-control" v-model="users.password"> <span>密码</span>
                         </label>
                         <label class="form-group has-float-label mb-4">
-                            <input class="form-control" v-model="users.usertype"> <span>用户类型</span>
+                            <select class="custom-select" v-model="users.usertype">
+                                <option v-for="item in roles" :value="item.id">{{item.name}}</option>
+                            </select>
+                            <span>用户类型</span>
                         </label>
                         <label class="form-group has-float-label mb-4">
                             <input class="form-control" v-model="users.gender"> <span>性别</span>
@@ -254,6 +248,7 @@
                 show:true,
                 action:0, // action 为1时进行添加，为2时进行修改
                 users:[],
+                roles:[]
             }
         },
         methods:{
@@ -317,6 +312,23 @@
                 });
 
             },
+            getAllRoles(){
+                // 获取用户角色信息
+                let self = this
+                $.ajax({
+                    type: 'POST',
+                    url: host+"roles/list",
+                    data: {},
+                    success: function (response){
+                        if(response.code==0){
+                            self.roles=response.aaData;
+                            console.log(self.roles)
+                        }else{
+                            showNotify('top', 'center', "danger","结果","获取角色信息失败，请联系管理员。");
+                        }
+                    }
+                });
+            },
             showUpdateItem(){
                 // 显示修改界面
                 console.log(datatableRow.rows('.selected').data());
@@ -341,6 +353,9 @@
                 // 清空
                 this.users={}
             }
+        },
+        mounted(){
+            this.getAllRoles()
         }
     })
 

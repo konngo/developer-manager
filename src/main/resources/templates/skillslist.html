@@ -183,7 +183,11 @@
 
 
                     <label class="form-group has-float-label mb-4">
-                        <input class="form-control" v-model="skills.type"> <span>技能分类</span>
+
+                        <select class="form-control" v-model="skills.type">
+                            <option v-for="item in types" :value="item.id">{{item.name}}</option>
+                        </select>
+                         <span>技能分类</span>
                     </label>
                     <label class="form-group has-float-label mb-4">
                         <input class="form-control" v-model="skills.name"> <span>技能名称</span>
@@ -218,7 +222,8 @@
                 show:true,
                 action:0, // action 为1时进行添加，为2时进行修改
                 skills:[],
-                types:[]
+                types:[],
+                skilltype:[]
             }
         },
         methods:{
@@ -310,6 +315,9 @@
                 // 清空
                 this.skills={}
             }
+        },
+        created(){
+            this.initTypes();
         }
     })
 

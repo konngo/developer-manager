@@ -29,3 +29,7 @@ mybatis:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/*Mapper.xml
 
+logging:
+  level:
+    cn:
+      konngo: DEBUG

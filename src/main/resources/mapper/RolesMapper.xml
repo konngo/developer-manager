@@ -23,25 +23,31 @@
         select r.* from roles r join userroles u on r.id=u.roleid  where u.userid=#{id}
     </select>
 
-    <insert id="insert" >
+    <select id="selectByUser" resultMap="RolesEntity">
+        select r.* from roles r join userroles u on r.id=u.roleid  where u.userid=#{id}
+    </select>
+
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id">
         insert into roles
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id!=null" >id,</if>
                 <if test="name!=null" >name,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id!=null" >#{
-                    id},</if>
                 <if test="name!=null" >#{
                     name},</if>
         </trim>
     </insert>
 
+    <insert id="addUserRole"  >
+        insert into userroles values (#{id},#{type});
+    </insert>
+
+
+
     <update id="update">
         update roles
         <set>
             <trim  suffixOverrides=",">
-                <if test="id!=null" >id=#{id},</if>
                 <if test="name!=null" >name=#{name},</if>
             </trim>
         </set>

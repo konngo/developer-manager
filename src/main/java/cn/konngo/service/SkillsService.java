@@ -30,4 +30,7 @@ public class SkillsService {
     // 更新技能
     public int update (SkillsEntity skillsEntity){ return skillsDao.update(skillsEntity);}
 
+    public List listByUser(int id) {
+        return  skillsDao.listByUser(id);
+    }
 }

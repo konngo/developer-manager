@@ -30,4 +30,12 @@ public class RolesService {
     // 更新角色
     public int update (RolesEntity rolesEntity){ return rolesDao.update(rolesEntity);}
 
+    // 根据当前用户查询
+    public RolesEntity selectByUser(int id) {
+        return rolesDao.selectByUser(id);
+    }
+
+    public void addUserRole(int id, String type) {
+         rolesDao.addUserRole(id, Integer.parseInt(type));
+    }
 }
