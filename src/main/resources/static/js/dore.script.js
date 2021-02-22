@@ -3107,6 +3107,7 @@ $.dore = function (element, options) {
       }
 
 
+
       getAllUser();
       getAllRole();
       getAllLabels();
@@ -3123,6 +3124,22 @@ $.dore = function (element, options) {
         },
         {"data":"gender"},
         {"data":"address"},
+        {"data":"id","render":function  ( data, type, full, meta ) {
+            var skill="无"
+            $.ajaxSettings.async = false
+            $.ajax({
+              type: 'POST',
+              url: host+"userskills/userskill",
+              data: {id:data},
+              success: function (response){
+                if(response.code==0){
+                  skill=response.aaData;
+                }
+              }
+            });
+            return skill;
+          }
+        },
         {"data":"avatar","render":function  ( data, type, full, meta ) {
             return "<img src='"+data+"'  class=\"img-thumbnail list-thumbnail xsmall border-0 rounded-circle\"></img>";
           }

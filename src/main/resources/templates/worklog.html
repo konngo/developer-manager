@@ -128,11 +128,11 @@
                     <div class="card-body">
                         <h5 class="mb-4">工作日志信息</h5>
 
-                        <input type="hidden" v-model="worklog.id">
+                        <input type="hidden" v-model="log.id">
 
 
                         <label class="form-group has-float-label mb-4">
-                            <input class="form-control" v-model="worklog.name"> <span>标题</span>
+                            <input class="form-control" v-model="log.name"> <span>标题</span>
                         </label>
 
                     </div>
@@ -154,7 +154,16 @@
 
                     </div>
                 </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="mb-4">选择标签</h5>
 
+                        <select class="custom-select" v-model="log.labels">
+                            <option v-for="item in labels" :value="item.id">{{item.name}}</option>
+                        </select>
+
+                    </div>
+                </div>
 
                 <div class="card mb-4">
                     <div class="card-body">
@@ -189,11 +198,13 @@
                 name:{},
                 log :{},
                 alluser:[],
+                labels:[],
             }
         },
         methods:{
             reback(){
                 this.show=true;
+                this.init();
             },
             getAllLabels(){
                 // 获取所有标签
@@ -263,7 +274,7 @@
             filterName(id){
                 var name = "admin"
                 for(var i = 0 ; i< this.alluser.length ; i++){
-                    if (id = this.alluser[i].id){
+                    if (id == this.alluser[i].id){
                         name = this.alluser[i].nickname
                     }
                 }
@@ -272,7 +283,7 @@
             filterLabel(id){
                 var name = ""
                 for(var i = 0 ; i< this.labels.length ; i++){
-                    if (id = this.labels[i].id){
+                    if (id == this.labels[i].id){
                         name = this.labels[i].name
                     }
                 }

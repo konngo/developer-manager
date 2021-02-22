@@ -52,7 +52,7 @@
 
 
     <delete id="deleteByuser">
-        delete from userskills where roleid=#{roleid} and userid=#{userid}
+        delete from userskills where skillid=#{skillid} and userid=#{userid}
     </delete>
 
 </mapper>

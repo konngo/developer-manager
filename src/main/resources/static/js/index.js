@@ -110,6 +110,7 @@ var vm=new Vue({
                     if (response.code == 0) {
                         var permissions = response.aaData
                         self.target = initPermission(permissions)
+                        console.log(self.target)
                     }
                 }
             });

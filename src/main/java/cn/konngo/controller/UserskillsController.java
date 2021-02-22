@@ -1,5 +1,6 @@
 package cn.konngo.controller;
 
+import cn.konngo.entity.SkillsEntity;
 import cn.konngo.entity.UsersEntity;
 import cn.konngo.entity.UserskillsEntity;
 import cn.konngo.service.SkillsService;
@@ -56,6 +57,24 @@ public class UserskillsController {
         List list=skillsService.listByUser(usersEntity.getId());
         map.put("count",list.size());
         map.put("aaData",list);
+        return map;
+    }
+
+    @RequestMapping("userskill")
+    @ResponseBody
+    // 返回指定用户技能
+    public Map userskill(int id){
+        String str ="";
+        Map map=new HashMap();
+        map.put("code","0");
+        map.put("msg","");
+        List<SkillsEntity> list=skillsService.listByUser(id);
+        for (SkillsEntity s:list) {
+            str+=s.getName();
+            str+=" ";
+        }
+        map.put("count",list.size());
+        map.put("aaData",str);
         return map;
     }
 
