@@ -3,6 +3,7 @@ package cn.konngo.dao;
 
 import cn.konngo.entity.RolesEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -42,5 +43,5 @@ public interface RolesDao {
 
     RolesEntity selectByUser(int id);
 
-    void addUserRole(int id, int type);
+    void addUserRole(@Param("id") int id, @Param("type") int type);
 }

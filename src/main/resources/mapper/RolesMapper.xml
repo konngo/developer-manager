@@ -39,7 +39,7 @@
     </insert>
 
     <insert id="addUserRole"  >
-        insert into userroles values (#{id},#{type});
+        insert into userroles (userid,roleid)  values (#{id},#{type});
     </insert>
 
 

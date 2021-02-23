@@ -3167,7 +3167,7 @@ $.dore = function (element, options) {
         {"data":"userid","render":function  ( data, type, full, meta ) {
             var name  = "张三"
             for ( var i = 0 ; i < alluser.length; i++){
-              if (alluser[i].id = data){
+              if (alluser[i].id == data){
                 name = alluser[i].nickname
               }
             }
@@ -3182,7 +3182,7 @@ $.dore = function (element, options) {
         {"data":"labels","render":function  ( data, type, full, meta ) {
             var name  = "无"
             for ( var i = 0 ; i < labels.length; i++){
-              if (labels[i].id = data){
+              if (labels[i].id == data){
                 name = labels[i].name
               }
             }
@@ -3192,7 +3192,7 @@ $.dore = function (element, options) {
         {"data":"userid","render":function  ( data, type, full, meta ) {
             var name  = "张三"
             for ( var i = 0 ; i < alluser.length; i++){
-              if (alluser[i].id = data){
+              if (alluser[i].id == data){
                 name = alluser[i].nickname
               }
             }

@@ -29,10 +29,9 @@
         select * from users where username=#{username}
     </select>
 
-    <insert id="insert" >
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into users
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id!=null" >id,</if>
                 <if test="username!=null" >username,</if>
                 <if test="nickname!=null" >nickname,</if>
                 <if test="password!=null" >password,</if>
@@ -42,8 +41,6 @@
                 <if test="avatar!=null" >avatar,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id!=null" >#{
-                    id},</if>
                 <if test="username!=null" >#{
                     username},</if>
                 <if test="nickname!=null" >#{

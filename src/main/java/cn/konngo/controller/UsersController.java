@@ -98,8 +98,8 @@ public class UsersController {
         if ((""+usersEntity.getId()).equals("")||usersEntity.getId()==0){
             // 设置用户角色
             String type = usersEntity.getUsertype();
-            rolesService.addUserRole(usersEntity.getId(),type);
             count=usersService.insert(usersEntity);
+            rolesService.addUserRole(count,type);
         }else {
             count=usersService.update(usersEntity);
         }
