@@ -32,9 +32,7 @@
     <link rel="stylesheet" href="css/vendor/quill.bubble.css" />
 
 
-
     <script src="js/vendor/jquery-3.3.1.min.js"></script>
-
     <script src="js/vendor/vue.min.js"></script>
     <script src="js/vendor/dropzone.min.js"></script>
     <script src="js/vendor/bootstrap.bundle.min.js"></script>
@@ -130,8 +128,6 @@
                     <button @click="changeProfile" class="btn btn-primary mb-0">提交</button>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
@@ -153,16 +149,13 @@
             init(){
                 var id=localStorage.getItem("userid");
                 var self=this;
-
                 $.ajax({
                     type: 'POST',
-                    url: host+"users/search",
+                    url: host+"users/nowuser",
                     data: {
-                        id:id
                     },
                     success: function (response){
                         self.users=response.entity
-                        console.log(self.users)
                     },
                     error:function (){
                         showNotify('top', 'center', "danger","用户信息","获取个人信息失败，请稍后重新尝试。");
@@ -170,7 +163,6 @@
                 });
             },
             changeProfile(){
-
                 // 获取图片地址
                 var imgdata=imghost+tempimg.data;
 

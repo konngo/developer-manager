@@ -36,6 +36,23 @@ public class UsersController {
         return map;
     }
 
+
+    @RequestMapping("checkIsUser")
+    @ResponseBody
+    // 返回所有用户
+    public Map checkIsUser(int id){
+        Map map=new HashMap();
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        UsersEntity usersEntity=usersService.login(username);
+        System.out.println(usersEntity.getId()+"::"+id);
+        if (usersEntity.getId()==id){
+            map.put("code","0");
+        }else {
+            map.put("code","1");
+        }
+        return map;
+    }
+
     @RequestMapping("search")
     @ResponseBody
     // 查询指定用户
@@ -76,6 +93,7 @@ public class UsersController {
     }
 
 
+
     @RequestMapping("delete")
     @ResponseBody
     // 根据id删除用户
@@ -99,7 +117,7 @@ public class UsersController {
             // 设置用户角色
             String type = usersEntity.getUsertype();
             count=usersService.insert(usersEntity);
-            rolesService.addUserRole(count,type);
+            rolesService.addUserRole(usersEntity.getId(),type);
         }else {
             count=usersService.update(usersEntity);
         }

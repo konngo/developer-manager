@@ -5,9 +5,7 @@
     <base th:href="${#request.getContextPath()}+'/'">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
     <link rel="stylesheet" href="font/iconsmind-s/css/iconsminds.css" />
-
     <link rel="stylesheet" href="font/simple-line-icons/css/simple-line-icons.css" />
     <link rel="stylesheet" href="css/vendor/fullcalendar.min.css" />
     <link rel="stylesheet" href="css/vendor/dataTables.bootstrap4.min.css" />
@@ -29,11 +27,7 @@
     <link rel="stylesheet" href="css/vendor/dropzone.min.css" />
     <link rel="stylesheet" href="css/vendor/quill.snow.css" />
     <link rel="stylesheet" href="css/vendor/quill.bubble.css" />
-
-
-
     <script src="js/vendor/jquery-3.3.1.min.js"></script>
-
     <script src="js/vendor/vue.min.js"></script>
     <script src="js/vendor/dropzone.min.js"></script>
     <script src="js/vendor/bootstrap.bundle.min.js"></script>
@@ -67,7 +61,6 @@
     <script src="js/vendor/quill.min.js"></script>
     <script src="js/vendor/ckeditor5-build-classic/ckeditor.js"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ChFSPAT0N4jcce5lfCBKOh570kD91WOO"></script>
-
 </head>
 <body  class="show-spinner">
 
@@ -93,7 +86,6 @@
                     </nav>
                 </div>
 
-
                 <div class="separator mb-5"></div>
             </div>
         </div>
@@ -102,7 +94,6 @@
             <div class="col-12 col-md-12 col-xl-8">
                 <div class="card mb-4">
                     <div class="card-body">
-
                         <div class="glide gallery mb-4 ">
                             <div class="glide__track" data-glide-el="track">
                                 <div class="glide__slides">
@@ -114,18 +105,17 @@
                         </div>
 
                         <div class="mb-5">
-                            <h5 class="card-title">{{bugresolve.name}}</h5>
+                            <h5 class="card-title">
+                                {{bugresolve.name}}
+                            </h5>
+                            <button class="btn btn-outline-primary mb-1" @click="deleteBtn" type="button"
+                                    v-if="showdelete" >删除文章</button>
                             <p v-html="bugresolve.content">
                             </p>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
-
-
 
 
 
@@ -147,9 +137,39 @@
         data(){
             return {
                 bugresolve:[],
+                showdelete:false
             }
         },
         methods:{
+            deleteBtn(){
+                var self=this;
+                $.ajax({
+                    type: 'POST',
+                    url: host+"bugresolve/delete?id="+id,
+                    data: {},
+                    success: function (response){
+                        if(response.code==0){
+                            showNotify('top', 'center', "success","结果","删除成功");
+                        }
+                    }
+                })
+            },
+            checkShowDelete(){
+                var self = this
+                var userid = this.bugresolve.userid
+                $.ajax({
+                    type: 'POST',
+                    url: host+"users/checkIsUser?id="+userid,
+                    data: {},
+                    success: function (response){
+                        if(response.code==0){
+                            self.showdelete = true
+                        }else{
+                            self.showdelete = false
+                        }
+                    }
+                })
+            },
             init (){
                 var self=this;
                 $.ajax({
@@ -158,16 +178,17 @@
                     data: {},
                     success: function (response){
                         if(response.code==0){
-                            self.bugresolve=response.entity;
+                            self.bugresolve=response.entity
+                            self.checkShowDelete()
                         }else{
                             showNotify('top', 'center', "danger","结果","服务器连接异常，请重新尝试。");
                         }
                     }
-                });
+                })
             }
         },
         mounted(){
-            this.init();
+            this.init()
         }
     })
 </script>

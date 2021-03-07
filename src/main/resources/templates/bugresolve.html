@@ -264,7 +264,8 @@
                         name:this.bug.name,
                         content:ckEditor.getData().toString(),
                         avatar:imgdata,
-                        userid:this.bug.userid
+                        userid:this.bug.userid,
+                        labels:this.bug.labels
                     },
                     success: function (response){
                         if(response.code==0){

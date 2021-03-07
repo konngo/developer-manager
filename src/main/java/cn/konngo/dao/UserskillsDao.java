@@ -3,6 +3,7 @@ package cn.konngo.dao;
 
 import cn.konngo.entity.UserskillsEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -37,5 +38,5 @@ public interface UserskillsDao {
     */
     int insert(UserskillsEntity userskillsEntity);
 
-    int deleteByuser(int roleid, int userid);
+    int deleteByuser(@Param("skillid") int skillid,@Param("userid") int userid);
 }

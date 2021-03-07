@@ -87,7 +87,6 @@ public class RolesController {
     // 添加或者修改角色
     public HashMap saveOrUpdate(RolesEntity rolesEntity){
         HashMap map=new HashMap();
-
         int count=0;
         // 根据id进行判断，如果id为空或者0进行添加操作，否则进行修改
         if ((""+rolesEntity.getId()).equals("")||rolesEntity.getId()==0){

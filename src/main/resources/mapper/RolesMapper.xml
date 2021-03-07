@@ -27,14 +27,13 @@
         select r.* from roles r join userroles u on r.id=u.roleid  where u.userid=#{id}
     </select>
 
-    <insert id="insert"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into roles
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="name!=null" >name,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="name!=null" >#{
-                    name},</if>
+                <if test="name!=null" >#{name},</if>
         </trim>
     </insert>
 

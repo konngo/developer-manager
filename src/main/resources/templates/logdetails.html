@@ -88,6 +88,7 @@
                                 <a href="#">worklog</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Detail</li>
+
                         </ol>
                     </nav>
                 </div>
@@ -114,6 +115,8 @@
 
                         <div class="mb-5">
                             <h5 class="card-title">{{worklog.name}}</h5>
+                            <button class="btn btn-outline-primary mb-1" @click="deleteBtn" type="button"
+                                    v-if="showdelete" >删除文章</button>
                             <p v-html="worklog.content">
                             </p>
                         </div>
@@ -146,9 +149,39 @@
         data(){
             return {
                 worklog:[],
+                showdelete:false
             }
         },
         methods:{
+            deleteBtn(){
+                var self=this;
+                $.ajax({
+                    type: 'POST',
+                    url: host+"worklog/delete?id="+id,
+                    data: {},
+                    success: function (response){
+                        if(response.code==0){
+                            showNotify('top', 'center', "success","结果","删除成功");
+                        }
+                    }
+                });
+            },
+            checkShowDelete(){
+                var self=this;
+                var userid = this.worklog.userid;
+                $.ajax({
+                    type: 'POST',
+                    url: host+"users/checkIsUser?id="+userid,
+                    data: {},
+                    success: function (response){
+                        if(response.code==0){
+                            self.showdelete = true
+                        }else{
+                            self.showdelete = false
+                        }
+                    }
+                });
+            },
             init (){
                 var self=this;
                 $.ajax({
@@ -158,6 +191,7 @@
                     success: function (response){
                         if(response.code==0){
                             self.worklog=response.entity;
+                            self.checkShowDelete();
                         }else{
                             showNotify('top', 'center', "danger","结果","服务器连接异常，请重新尝试。");
                         }

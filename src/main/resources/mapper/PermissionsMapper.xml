@@ -22,7 +22,7 @@
         select p.* from permissions p join rolepermissions r on r.perid=p.id where r.roleid=#{id}
     </select>
 
-    <insert id="insert"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into permissions
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="name!=null" >name,</if>
